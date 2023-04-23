@@ -52,13 +52,16 @@ font = font.SysFont('veranda', 70)
 loseL = font.render('player L lose', True, (180,0,0))
 loseR = font.render('player R lose', True, (180,0,0))
 
-#font1 = font.SysFont('veranda', 20)
+# font1 = font.SysFont('veranda', 20)
 res = font.render('R to reset', True, (180,0,0))
 
 game = True
 finish = False
 clock = time.Clock()
 FPS = 60
+
+time_wait = 5*FPS
+wait= time_wait
 
 while game:
     for e in event.get():
@@ -71,6 +74,15 @@ while game:
                 ball.rect.y = 200
         
     if not finish:
+        if wait <= 0:
+            if speed_y > 0:
+                speed_y +=1
+            else:
+                speed_y -= 1
+            wait = time_wait
+        else:
+            wait -= 1
+
         window.fill(back)
         racket1.update_l()
         racket2.update_r()
@@ -78,6 +90,10 @@ while game:
         ball.rect.y += speed_y
         if racket1.rect.colliderect(ball.rect) or racket2.rect.colliderect(ball.rect):
             speed_x *= -1
+            if speed_x > 0:
+                speed_x +=1
+            else:
+                speed_x -= 1
         if ball.rect.y > win_height - 50 or ball.rect.y < 0:
             speed_y *= -1
         
@@ -97,3 +113,5 @@ while game:
         ball.reset()
     display.update()
     clock.tick(FPS)
+
+
